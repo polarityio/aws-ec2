@@ -1,0 +1,81 @@
+{{#each details.Reservations as | reservation |}}
+  {{#each reservation.Instances as | instance |}}
+    <h1 class="p-title">{{fa-icon icon="info-circle" fixedWidth=true}} General Info</h1>
+    <div>
+      <span class="p-key">Name:</span>
+      <span class="p-value">{{instance.Name}}</span>
+    </div>
+    <div>
+      <span class="p-key">Availability Zone:</span>
+      <span class="p-value">{{instance.Placement.AvailabilityZone}}</span>
+    </div>
+    <div>
+      <span class="p-key">Instance Id:</span>
+      <span class="p-value">{{instance.InstanceId}}</span>
+    </div>
+    <div>
+      <span class="p-key">Instance State:</span>
+      <span class="p-value">{{instance.State.Name}}</span>
+    </div>
+    <div>
+      <span class="p-key">Instance Type:</span>
+      <span class="p-value">{{instance.InstanceType}}</span>
+    </div>
+    <div>
+      <span class="p-key">Monitoring:</span>
+      <span class="p-value">{{instance.Monitoring.State}}</span>
+    </div>
+    <div>
+      <span class="p-key">Platform:</span>
+      <span class="p-value">{{instance.PlatformDetails}}</span>
+    </div>
+    <div>
+      <span class="p-key">Key Name:</span>
+      <span class="p-value">{{instance.KeyName}}</span>
+    </div>
+    <div>
+      <span class="p-key">Launch Time:</span>
+      <span class="p-value">{{instance.LaunchTime}}</span>
+    </div>
+
+    <h1 class="p-title">{{fa-icon icon="network-wired" fixedWidth=true}} Network</h1>
+    <div>
+      <span class="p-key">Public IP Address:</span>
+      <span class="p-value">{{instance.PublicIpAddress}}</span>
+    </div>
+    <div>
+      <span class="p-key">Public DNS Name:</span>
+      <span class="p-value">{{instance.PublicDnsName}}</span>
+    </div>
+    <div>
+      <span class="p-key">Private IP Address:</span>
+      <span class="p-value">{{instance.PrivateIpAddress}}</span>
+    </div>
+    <div>
+      <span class="p-key">Private DNS Name:</span>
+      <span class="p-value">{{instance.PrivateDnsName}}</span>
+    </div>
+
+    <h1 class="p-title">{{fa-icon icon="shield-alt" fixedWidth=true}} Security Groups</h1>
+    {{#if (eq instance.SecurityGroups.length 0)}}
+      <span class="p-footnote">No security groups</span>
+    {{/if}}
+    {{#each instance.SecurityGroups as | group | }}
+      <div>
+        <span class="p-value">{{group.GroupName}}</span>
+        <span class="p-key">({{group.GroupId}})</span>
+      </div>
+    {{/each}}
+
+    <h1 class="p-title">{{fa-icon icon="tags" fixedWidth=true}} Tags</h1>
+    {{#if (eq instance.Tags.length 0)}}
+      <span class="p-footnote">No tags</span>
+    {{/if}}
+    {{#each instance.Tags as | tag | }}
+      <div class="tag">
+        <span class="key">{{tag.Key}}</span><span class="value">{{tag.Value}}</span>
+      </div>
+    {{/each}}
+
+  {{/each}}
+{{/each}}

@@ -127,13 +127,22 @@ function createFilter(entity) {
   }
 }
 
-function createSummaryTags(instance) {
+function createSummaryTags(results) {
   const tags = [];
-  const name = instance.Tags.find((tag) => tag.Key === 'Name');
-  Logger.info({tags: instance.Tags}, 'Summary Tag');
-  if (name) {
-    tags.push(name.Value);
+  if(Array.isArray(results.Reservations)){
+    results.Reservations.forEach(reservation => {
+      if(Array.isArray(reservation.Instances)){
+        reservation.Instances.forEach((instance) => {
+          const name = instance.Tags.find((tag) => tag.Key === 'Name');
+          instance.Name = name.Value;
+          if (name) {
+            tags.push(name.Value);
+          }
+        })
+      }
+    })
   }
+
   return tags;
 }
 
@@ -174,8 +183,8 @@ async function doLookup(entities, options, cb) {
         return {
           entity,
           data: {
-            summary: createSummaryTags(result.Reservations[0].Instances[0]),
-            details: Array.isArray(result.Reservations) ? result.Reservations[0] : []
+            summary: createSummaryTags(result),
+            details: result
           }
         };
       }

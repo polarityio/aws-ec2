@@ -9,17 +9,17 @@ module.exports = {
       regex: /ip-[0-9\-]+\.ec2\.internal/
     }
   ],
-  description: 'Query hosts in EC2',
+  description: 'Query hosts in a specified EC2 region',
   defaultColor: 'light-gray',
   styles: ['./styles/style.less'],
-  // block: {
-  //   component: {
-  //     file: './component/block.js'
-  //   },
-  //   template: {
-  //     file: './template/block.hbs'
-  //   }
-  // },
+  block: {
+    component: {
+      file: './component/block.js'
+    },
+    template: {
+      file: './template/block.hbs'
+    }
+  },
   request: {
     // Provide the path to your certFile. Leave an empty string to ignore this option.
     // Relative paths are relative to the integration's root directory
