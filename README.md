@@ -2,6 +2,8 @@
 
 The Polarity AWS EC2 integration enables querying your ec2 instances by IP and domain. 
 
+<img src="./assets/overlay.png" width="50%">
+
 The integration will currently search the following fields:
 
 | Entity Type | Fields | Example entity  |
