@@ -2,12 +2,25 @@
 
 const async = require('async');
 const { EC2Client, DescribeInstancesCommand } = require('@aws-sdk/client-ec2');
-const get = require('lodash.get');
-const { DateTime } = require('luxon');
 
 let Logger;
 let originalOptions = {};
 let ec2Client = null;
+
+/**
+ * This captures the deprecation warning for Node 12 and prevents it from being reported as an error by
+ * the integration framework.  Instead we just log it as a warning.
+ */
+const origWarning = process.emitWarning;
+process.emitWarning = function (...args) {
+  if (Array.isArray(args) && args.length > 0 && args[0].startsWith('The AWS SDK for JavaScript (v3) will')) {
+    // Log the deprecation in our integration logs but don't bubble it up on stderr
+    Logger.warn({ args }, 'Node12 Deprecation Warning');
+  } else {
+    // pass any other warnings through normally
+    return origWarning.apply(process, args);
+  }
+};
 
 function startup(logger) {
   Logger = logger;
@@ -129,18 +142,25 @@ function createFilter(entity) {
 
 function createSummaryTags(results) {
   const tags = [];
-  if(Array.isArray(results.Reservations)){
-    results.Reservations.forEach(reservation => {
-      if(Array.isArray(reservation.Instances)){
+  let numInstances = 0;
+  if (Array.isArray(results.Reservations)) {
+    results.Reservations.forEach((reservation) => {
+      if (Array.isArray(reservation.Instances)) {
+        numInstances += reservation.Instances.length;
         reservation.Instances.forEach((instance) => {
           const name = instance.Tags.find((tag) => tag.Key === 'Name');
           instance.Name = name.Value;
           if (name) {
             tags.push(name.Value);
           }
-        })
+        });
       }
-    })
+    });
+  }
+
+  // No tags so just put a number of instances
+  if(tags.length === 0){
+    tags.push(`${numInstances} instance${numInstances > 1 ? 's' : ''}`);
   }
 
   return tags;
@@ -161,7 +181,7 @@ async function doLookup(entities, options, cb) {
       };
     }
 
-    Logger.trace({ clientOptions }, 'Creating new DynamoDB client');
+    Logger.trace({ clientOptions }, 'Creating new EC2 client');
     ec2Client = new EC2Client(clientOptions);
   }
 
@@ -170,7 +190,7 @@ async function doLookup(entities, options, cb) {
       const query = new DescribeInstancesCommand({
         Filters: createFilter(entity)
       });
-      Logger.trace({ query }, 'search partiQL query');
+      Logger.trace({ query }, 'EC2 Search Query');
       const result = await ec2Client.send(query);
       Logger.trace({ result }, 'Raw Query Result');
       if (Array.isArray(result.Reservations) && result.Reservations.length === 0) {
@@ -216,8 +236,8 @@ function validateOptions(userOptions, cb) {
   }
 
   if (
-      typeof userOptions.secretAccessKey.value !== 'string' ||
-      (typeof userOptions.secretAccessKey.value === 'string' && userOptions.secretAccessKey.value.length === 0)
+    typeof userOptions.secretAccessKey.value !== 'string' ||
+    (typeof userOptions.secretAccessKey.value === 'string' && userOptions.secretAccessKey.value.length === 0)
   ) {
     errors.push({
       key: 'secretAccessKey',
