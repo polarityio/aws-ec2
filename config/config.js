@@ -3,14 +3,15 @@ module.exports = {
   acronym: 'AWS-EC2',
   logging: { level: 'info' },
   entityTypes: ['IPv4', 'IPv6', 'domain'],
-  customTypes : [
+  customTypes: [
     {
       key: 'privateIpDnsName',
       regex: /ip-[0-9\-]+\.ec2\.internal/
     }
   ],
-  description: 'Query hosts in a specified EC2 region',
+  description: 'Query EC2 instances in a specified region',
   defaultColor: 'light-gray',
+  onDemandOnly: true,
   styles: ['./styles/style.less'],
   block: {
     component: {
@@ -47,11 +48,10 @@ module.exports = {
     {
       key: 'region',
       name: 'AWS Region',
-      description:
-        'The AWS Region for your DynamoDB database.  The integration does not support local dynamodb instances.',
+      description: 'The AWS Region for your EC2 instances. The integration will only search the selected region.',
       default: {
-        value: 'us-east-2',
-        display: 'US East (Ohio)'
+        value: 'us-east-1',
+        display: 'US East (N. Virginia)'
       },
       options: [
         {
@@ -160,7 +160,7 @@ module.exports = {
       key: 'accessKeyId',
       name: 'AWS Access Key Id',
       description:
-        'The access key ID that identifies the security credentials used to authenticate to the specified DynamoDB instance.  If left blank, credentials will be loaded from AWS IAM using the credentials provider of the Amazon EC2 instance (if configured in the instance metadata)',
+        'The access key ID that identifies the security credentials used to authenticate to the EC2.  If left blank, credentials will be loaded from AWS IAM using the credentials provider of the Amazon EC2 instance (if configured in the instance metadata)',
       default: '',
       type: 'text',
       userCanEdit: false,
@@ -169,7 +169,8 @@ module.exports = {
     {
       key: 'secretAccessKey',
       name: 'AWS Secret Access Key',
-      description: 'The secret access key that can be used to sign requests. If left blank, credentials will be loaded from AWS IAM using the credentials provider of the Amazon EC2 instance (if configured in the instance metadata)',
+      description:
+        'The secret access key that can be used to sign requests. If left blank, credentials will be loaded from AWS IAM using the credentials provider of the Amazon EC2 instance (if configured in the instance metadata)',
       default: '',
       type: 'password',
       userCanEdit: false,
