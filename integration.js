@@ -121,7 +121,10 @@ function createFilter(entity) {
     ];
   }
 
-  if (entity.isDomain) {
+  // ensure privateIpDnsName type is always run as a `private-dns-name` search even
+  // if the regex is modified to include a valid TLD which cause the `isDomain` flag
+  // to be true (INT-922)
+  if (entity.isDomain && !entity.types.includes('custom.privateIpDnsName')) {
     return [
       {
         Name: 'dns-name',
