@@ -2,13 +2,13 @@
   "main": "./integration.js",
   "name": "AWS-EC2",
   "description": "AWS EC2",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "private": true,
   "dependencies": {
     "@aws-sdk/client-ec2": "3.200.0",
     "@aws-sdk/util-locate-window": "3.188.0",
     "luxon": "^3.2.1",
     "lodash.get": "^4.4.2",
-    "async": "^3.2.3"
+    "async": "^3.2.4"
   }
 }
