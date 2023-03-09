@@ -141,6 +141,17 @@ function createFilter(entity) {
       }
     ];
   }
+
+  if (entity.types.includes('custom.instanceId')) {
+    return [
+      {
+        Name: 'instance-id',
+        Values: [entity.value]
+      }
+    ];
+  }
+
+  throw new Error(`Unsupported entity type ${entity.types.join(',')}`)
 }
 
 function createSummaryTags(results) {
@@ -171,6 +182,8 @@ function createSummaryTags(results) {
 
 async function doLookup(entities, options, cb) {
   let lookupResults;
+
+  Logger.trace({entities}, 'doLookup');
 
   if (optionsHaveChanged(options) || ec2Client === null) {
     const clientOptions = {
@@ -227,6 +240,7 @@ async function doLookup(entities, options, cb) {
 }
 
 function validateOptions(userOptions, cb) {
+  Logger.info({userOptions}, 'Validating Options');
   let errors = [];
   if (
     typeof userOptions.accessKeyId.value !== 'string' ||
