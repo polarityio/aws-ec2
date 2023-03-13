@@ -13,6 +13,10 @@
     {
       "key": "privateIpDnsName",
       "regex": "ip-[0-9\\-]+\\.ec2\\.internal"
+    },
+    {
+      "key": "instanceId",
+      "regex": "\\bi-([a-f0-9]{8}|[a-f0-9]{17})\\b"
     }
   ],
   "description": "Query EC2 instances in a specified region",

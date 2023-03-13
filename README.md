@@ -14,6 +14,7 @@ The integration will currently search the following fields:
 | Private IP DNS Name | private-dns-name | ip-172-31-61-45.ec2.internal |
 | Private IPv6 | network-interface.addresses.private-ip-address | 2a05:d07c:2000:xxxx:xxxx:xxxx:xxxx |
 | Public IPv6 | network-interface.ipv6-addresses.ipv6-address | fd8e:a626:878f:6126:xxxx:xxxx:xxxx:xxxx |
+| InstanceId | instance-id |  i-1a2b3c4d (8 character version),  i-1234567890abcdef0 (17 character version)|
 
 
 ## AWS EC2

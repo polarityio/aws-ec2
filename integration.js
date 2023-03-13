@@ -141,6 +141,17 @@ function createFilter(entity) {
       }
     ];
   }
+
+  if (entity.types.includes('custom.instanceId')) {
+    return [
+      {
+        Name: 'instance-id',
+        Values: [entity.value]
+      }
+    ];
+  }
+
+  throw new Error(`Unsupported entity type ${entity.types.join(',')}`)
 }
 
 function createSummaryTags(results) {
@@ -171,6 +182,8 @@ function createSummaryTags(results) {
 
 async function doLookup(entities, options, cb) {
   let lookupResults;
+
+  Logger.trace({entities}, 'doLookup');
 
   if (optionsHaveChanged(options) || ec2Client === null) {
     const clientOptions = {
