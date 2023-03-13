@@ -240,7 +240,6 @@ async function doLookup(entities, options, cb) {
 }
 
 function validateOptions(userOptions, cb) {
-  Logger.info({userOptions}, 'Validating Options');
   let errors = [];
   if (
     typeof userOptions.accessKeyId.value !== 'string' ||
