@@ -138,7 +138,7 @@ module.exports = {
         },
         {
           value: 'sa-east-1',
-          display: 'South America (SC#o Paulo)'
+          display: 'South America (São Paulo)'
         },
         {
           value: 'us-gov-east-1',
